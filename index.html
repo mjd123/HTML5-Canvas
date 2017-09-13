@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+    const canvas = document.querySelector("#draw");
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
+    const ctx = canvas.getContext("2d");
+
+    ctx.lineJoin = "round";
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 5;
+
+    var clickX;
+    var clickY;
+    var canWeDraw = false;
+    var called = false;
+    var lineThickness = false;
+
+    function mouseClick(e) {
+
+      clickX = this.offsetX;
+      clickY = this.offsetY;
+      canWeDraw = true;
+      if (called) {
+        canWeDraw = false;
+        called = false;
+      }
+    }
+
+    function mouseOut(e) {
+      canWeDraw = false;
+    }
+
+    function draw(e) {
+
+      if (canWeDraw) {
+        var r = Math.floor(Math.random() * 255) + 0;
+        var b = Math.floor(Math.random() * 255) + 0;
+        var g = Math.floor(Math.random() * 255) + 0;
+        ctx.strokeStyle = 'rgb(' + r + ', ' + b + ', ' + g + ')';
+
+        var x = e.offsetX;
+        var y = e.offsetY;
+        //console.log(x, y);
+        ctx.beginPath();
+        ctx.moveTo(clickX, clickY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        clickX = x;
+        clickY = y;
+
+        if (lineThickness) {
+          ctx.lineWidth++;
+        } else {
+          ctx.lineWidth--;
+        }
+        if (ctx.lineWidth >= 50 || ctx.lineWidth <= 1) {
+          lineThickness = !lineThickness;
+        }
+
+        if (!called) {
+          called = true;
+        }
+
+      }
+    }
+
+
+
+    document.addEventListener("mousedown", mouseClick);
+    document.addEventListener("mousemove", draw);
+    document.addEventListener("mouseout", mouseOut);
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
+
+</body>
+
+</html>
